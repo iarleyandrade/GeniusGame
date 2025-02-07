@@ -1,0 +1,5 @@
+Jogador1:10
+Jogador2:7
+Jogador3:0
+Jogador4:0
+Jogador5:0
