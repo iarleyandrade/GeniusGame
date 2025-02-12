@@ -3,6 +3,7 @@
 #include <UniversalTelegramBot.h>
 #include <ArduinoJson.h>
 #include "ranking.h"
+#include "display.h"
 
 #define PINO_SALVAR 25
 #define PINO_NAO_SALVAR 26
@@ -16,41 +17,41 @@ WiFiClientSecure client;
 UniversalTelegramBot bot(BOT_TOKEN, client);
 
 void inicializarTelegram() {
-    client.setInsecure();  // Desativa verificação SSL (necessário para ESP32)
+    client.setInsecure();
     Serial.println("Bot do Telegram inicializado.");
 }
 
 void interagirFimJogo(int pontuacao) {
+    bot.sendMessage(String(NUMERO_DESTINO), "Deseja salvar seu placar? ('sim' aperte verde ou 'não' aperte vermelho)", "");
     while (true) {
         int leituraSalvar = digitalRead(PINO_SALVAR);
         int leituraNaoSalvar = digitalRead(PINO_NAO_SALVAR);
 
         if (leituraSalvar == LOW) {
             digitalWrite(22, HIGH);
-            delay(100);  // Delay para evitar múltiplos acionamentos rápidos
+            delay(100);
             digitalWrite(22, LOW);
-            bot.sendMessage(String(NUMERO_DESTINO), "Deseja salvar seu placar? (responda 'sim' ou 'não')", "");
-            esperaNome = true;  // Marca que está esperando o nome
-            esperarNome(pontuacao);  // Chama a função para esperar o nome do jogador
+            esperaNome = true;
+            esperarNome(pontuacao);
             break;  
         } else if (leituraNaoSalvar == LOW) {
             digitalWrite(5, HIGH);
-            delay(100);  // Delay para evitar múltiplos acionamentos rápidos
+            delay(100);
             digitalWrite(5, LOW);
             bot.sendMessage(String(NUMERO_DESTINO), "Você escolheu não salvar seu placar.", "");
-            esperaNome = false;  // Não vai salvar o placar
-            break;  // Sai do loop
+            esperaNome = false;
+            break;
         }
 
-        delay(100);  // Delay para evitar looping rápido demais
+        delay(100);
     }
 }
 
 void salvarPlacar(String texto, int pontuacao) {
     if (esperaNome) { 
-        atualizarRanking(texto, pontuacao);  // Atualiza o ranking com o nome e pontuação
+        atualizarRanking(texto, pontuacao);
         bot.sendMessage(String(NUMERO_DESTINO), "Seu placar foi salvo com sucesso!", "");
-        esperaNome = false;  // Reseta o estado de espera
+        esperaNome = false;
     }
 }
 
@@ -62,23 +63,40 @@ void mostrarRanking(String chat_id, String texto) {
 }
 
 void esperarNome(int pontuacao) {
-    // Espera o nome do jogador
-    int numNovasMensagens = bot.getUpdates(bot.last_message_received + 1);
+    exibirMensagem("Digite seu \n nome no \n Telegram", 2, 10, 10);
+    bot.sendMessage(String(NUMERO_DESTINO), "Digite seu nome para salvar no ranking:", "");
 
-    while (numNovasMensagens > 0 && esperaNome) {
-        for (int i = 0; i < numNovasMensagens; i++) {
-            String chat_id = bot.messages[i].chat_id;
-            String textoRecebido = bot.messages[i].text;
+    unsigned long tempoInicial = millis(); 
 
-            // Verifica se a mensagem é do chat correto (do jogador que está jogando)
-            if (esperaNome && chat_id.toInt() == NUMERO_DESTINO) {
-                salvarPlacar(textoRecebido, pontuacao);  // Chama para salvar o placar com o nome
-                esperaNome = false;  // Reseta o estado de espera
-                break;  // Sai do loop após processar o nome
+    while (esperaNome) {  
+        
+        int numNovasMensagens = bot.getUpdates(bot.last_message_received + 1);
+
+        if (numNovasMensagens > 0) {
+            for (int i = 0; i < numNovasMensagens; i++) {
+                String chat_id = bot.messages[i].chat_id;
+                String textoRecebido = bot.messages[i].text;
+
+                // Se a mensagem é do usuário correto
+                if (chat_id.toInt() == NUMERO_DESTINO) {
+                    salvarPlacar(textoRecebido, pontuacao);
+                    exibirMensagem("Seu placar \n foi salvo!!", 2, 10, 10); 
+                    esperaNome = false;
+                    break;
+                }
             }
         }
 
-        numNovasMensagens = bot.getUpdates(bot.last_message_received + 1);  // Atualiza novas mensagens
-        delay(100);  // Delay para evitar looping rápido demais
+        if (millis() - tempoInicial > 30000) {
+            bot.sendMessage(String(NUMERO_DESTINO), "Tempo esgotado! Seu placar não foi salvo.");
+            exibirMensagem("Tempo \n esgotado!", 2, 10, 10); 
+            esperaNome = false;
+        }
+
+        delay(100);
     }
 }
+
+
+
+

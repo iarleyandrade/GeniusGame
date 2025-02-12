@@ -238,4 +238,4 @@
  .pio/libdeps/upesy_wroom/ArduinoJson/src/ArduinoJson.hpp \
  .pio/libdeps/upesy_wroom/ArduinoJson/src/ArduinoJson/Configuration.hpp \
  .pio/libdeps/upesy_wroom/UniversalTelegramBot/src/TelegramCertificate.h \
- src/ranking.h
+ src/ranking.h src/display.h

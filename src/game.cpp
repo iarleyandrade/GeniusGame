@@ -11,7 +11,8 @@ const int totaljogadas = 100;
 
 const uint8_t pinoled[] = {5, 22, 2, 27};
 const uint8_t pinobotao[] = {26, 25, 33, 32};
-bool jogoEmAndamento = false;  // Definição da variável jogoEmAndamento
+bool jogoEmAndamento = false;
+#define vibracal 13
 
 // Definindo os tons para os LEDs
 const int gameTones[] = { NOTE_G3, NOTE_C4, NOTE_E4, NOTE_G5 };  // Definição de gameTones
@@ -24,6 +25,7 @@ void inicializarBotoesLeds(){
     pinMode(pinoled[i], OUTPUT);
     pinMode(pinobotao[i], INPUT_PULLUP);
   }
+  pinMode(vibracal, OUTPUT);
 }
 
 // Função para tocar a sequência de LEDs e sons
@@ -78,13 +80,13 @@ void gameOver() {
     exibirMensagem("Errou :(", 2, 10, 40);
 
     // Toca os sons de game over
+    digitalWrite(vibracal, HIGH);
     tone(21, NOTE_DS5);
     delay(300);
     tone(21, NOTE_D5);
     delay(300);
     tone(21, NOTE_CS5);
     delay(300);
-
     // Toca um efeito sonoro
     for (byte i = 0; i < 10; i++) {
         for (int pitch = -10; pitch <= 10; pitch++) {
@@ -93,6 +95,8 @@ void gameOver() {
         }
     }
     noTone(21);
+    delay(300);
+    digitalWrite(vibracal, LOW);
 
     int pontos = gameIndex - 1;
     if (verificarPontuacaoRanking(pontos))
@@ -100,13 +104,11 @@ void gameOver() {
       exibirMensagem("Salvar placar?\n Verde - Sim\n Vermelho - Não", 1, 10, 10);
       interagirFimJogo(pontos);
       delay(3000);
-      exibirMensagem("Salvo com\nSucesso!",2 ,10 ,10);
-      delay(3000);
     }
     
 
-    gameIndex = 0;  // Reseta a pontuação do jogo
-    exibirRanking();  // Exibe o ranking atualizado
+    gameIndex = 0;
+    exibirRanking();
     delay(4000);
 
     Serial.println("Aperte Start para iniciar um novo jogo");

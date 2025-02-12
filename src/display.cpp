@@ -1,8 +1,8 @@
 #include "display.h"
 #include <TFT_eSPI.h>
-#include "ranking.h"  // Incluindo a referência ao ranking.cpp
+#include "ranking.h"
 
-TFT_eSPI tft = TFT_eSPI();  // Instância global para evitar reinicializações
+TFT_eSPI tft = TFT_eSPI();
 
 void inicializarDisplay() {
     tft.init();
@@ -36,12 +36,12 @@ void exibirMensagem(String mensagem, int tamanho, int x, int y) {
 }
 
 void exibirRanking() {
-    String rankingTexto = lerRanking();  // Obtendo o ranking via função de ranking.cpp
+    String rankingTexto = lerRanking();
 
     tft.fillScreen(TFT_BLACK);  
-    tft.setCursor(20, 10);
+    tft.setCursor(35, 10);
     tft.setTextSize(1);         
     tft.setTextColor(TFT_WHITE);
     tft.println("RANKING");
-    tft.print(rankingTexto);  // Exibindo o ranking no display
+    tft.print(rankingTexto);
 }
