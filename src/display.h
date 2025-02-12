@@ -6,7 +6,7 @@
 void inicializarDisplay();
 void exibirStart();
 void exibirPlacar(int pontos);
-void exibirMensagem(String mensagem, int tamanho);
+void exibirMensagem(String mensagem, int tamanho, int x, int y);
 void exibirRanking();
 
 #endif

@@ -10,8 +10,8 @@ void inicializarDisplay() {
     tft.setTextSize(2);
     tft.fillScreen(TFT_BLACK);
     tft.setCursor(10, 40);
-    tft.print("Press Start");
 }
+
 
 void exibirStart() {
     tft.fillScreen(TFT_BLACK);
@@ -28,9 +28,9 @@ void exibirPlacar(int pontos) {
     tft.print(pontos);
 }
 
-void exibirMensagem(String mensagem, int tamanho) {
+void exibirMensagem(String mensagem, int tamanho, int x, int y) {
     tft.fillScreen(TFT_BLACK);
-    tft.setCursor(10, 40);
+    tft.setCursor(x, y);
     tft.setTextSize(tamanho); 
     tft.print(mensagem);
 }

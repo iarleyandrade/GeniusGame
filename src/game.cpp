@@ -8,7 +8,7 @@
 
 const int totaljogadas = 100;
 
-const uint8_t pinoled[] = {13, 2, 14, 27};
+const uint8_t pinoled[] = {5, 22, 2, 27};
 const uint8_t pinobotao[] = {26, 25, 33, 32};
 bool jogoEmAndamento = false;  // Definição da variável jogoEmAndamento
 
@@ -74,7 +74,7 @@ void gameOver() {
     delay(200);
 
     // Exibe a mensagem de game over
-    exibirMensagem("Errou :(", 2);
+    exibirMensagem("Errou :(", 2, 10, 40);
 
     // Toca os sons de game over
     tone(21, NOTE_DS5);

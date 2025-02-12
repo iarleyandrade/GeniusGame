@@ -4,6 +4,7 @@
 #include "ranking.h"
 #include "game.h"
 #include "display.h"
+#include "wifi_manager.h"
 
 
 #define botao_start 19
@@ -32,6 +33,9 @@ void setup() {
     pinMode(botao_start, INPUT_PULLUP);
     inicializarBotoesLeds();
     inicializarDisplay();
+
+    iniciarWiFi();
+    exibirStart();
 }
 
 void loop() {
