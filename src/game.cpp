@@ -5,6 +5,7 @@
 #include <TFT_eSPI.h>
 #include "ranking.h"
 #include "display.h"
+#include "telegram.h"
 
 const int totaljogadas = 100;
 
@@ -93,10 +94,16 @@ void gameOver() {
     }
     noTone(21);
 
-    // Chama a função para atualizar o ranking
-    String nomeJogador = "Jogador";  // Aqui, você pode modificar para pegar o nome do jogador real
     int pontos = gameIndex - 1;
-    atualizarRanking(nomeJogador, pontos);  // Atualiza o ranking
+    if (verificarPontuacaoRanking(pontos))
+    {
+      exibirMensagem("Salvar placar?\n Verde - Sim\n Vermelho - Não", 1, 10, 10);
+      interagirFimJogo(pontos);
+      delay(3000);
+      exibirMensagem("Salvo com\nSucesso!",2 ,10 ,10);
+      delay(3000);
+    }
+    
 
     gameIndex = 0;  // Reseta a pontuação do jogo
     exibirRanking();  // Exibe o ranking atualizado
