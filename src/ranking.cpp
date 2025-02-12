@@ -72,3 +72,39 @@ String lerRanking() {
     file.close();
     return rankingTexto;
 }
+
+bool verificarPontuacaoRanking(int pontuacao) {
+    struct Jogador {
+        String nome;
+        int pontos;
+    };
+
+    Jogador ranking[5];
+    int count = 0;
+
+    File file = LittleFS.open("/ranking.txt", "r");
+    if (!file) {
+        Serial.println("Erro ao abrir ranking.txt!");
+        return false;  // Caso não consiga abrir o arquivo, não entra no ranking
+    }
+
+    while (file.available() && count < 5) {
+        String linha = file.readStringUntil('\n');
+        int separador = linha.indexOf(':');
+        if (separador != -1) {
+            ranking[count].nome = linha.substring(0, separador);
+            ranking[count].pontos = linha.substring(separador + 1).toInt();
+            count++;
+        }
+    }
+    file.close();
+
+    // Verifica se a pontuação entra no ranking
+    for (int i = 0; i < 5; i++) {
+        if (pontuacao > ranking[i].pontos) {
+            return true;  // Se a pontuação for maior que algum valor no ranking, pode salvar
+        }
+    }
+    return false;  // Se a pontuação não entra no ranking
+}
+

@@ -5,6 +5,7 @@
 #include "game.h"
 #include "display.h"
 #include "wifi_manager.h"
+#include "telegram.h"
 
 
 #define botao_start 19
@@ -35,6 +36,8 @@ void setup() {
     inicializarDisplay();
 
     iniciarWiFi();
+    inicializarTelegram();
+    
     exibirStart();
 }
 

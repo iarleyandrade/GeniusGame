@@ -9,13 +9,11 @@ void iniciarWiFi() {
     delay(10);
 
     WiFiManager wifiManager;
-
-    wifiManager.resetSettings();
     wifiManager.setConfigPortalTimeout(240);
 
 
     if (WiFi.SSID().isEmpty()) {
-        exibirMensagem("configure o\n wifi", 2, 10, 10); 
+        exibirMensagem("Configure o\n Wifi", 2, 10, 10); 
     }
 
     if (!wifiManager.autoConnect("Genius Game", "12345678")) {
@@ -24,6 +22,7 @@ void iniciarWiFi() {
         ESP.restart();
         delay(5000);
     }
+
 
     exibirMensagem("Iniciando\n Genius!", 2, 10, 10); 
     delay(1000);
