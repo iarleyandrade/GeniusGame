@@ -66,12 +66,21 @@ String lerRanking() {
     }
 
     while (file.available()) {
-        rankingTexto += file.readStringUntil('\n') + "\n";
+        String linha = file.readStringUntil('\n');
+        
+        // Adiciona um espaço após os dois pontos, se houver
+        int separador = linha.indexOf(':');
+        if (separador != -1) {
+            linha = linha.substring(0, separador + 1) + " " + linha.substring(separador + 1);
+        }
+
+        rankingTexto += linha + "\n";
     }
 
     file.close();
     return rankingTexto;
 }
+
 
 bool verificarPontuacaoRanking(int pontuacao) {
     struct Jogador {

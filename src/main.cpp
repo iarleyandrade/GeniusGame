@@ -9,6 +9,8 @@
 
 
 #define botao_start 19
+static unsigned long ultimoTempoTelegram = 0;
+unsigned long intervaloTelegram = 5000;
 
 void setup() {
     Serial.begin(115200);
@@ -22,11 +24,11 @@ void setup() {
     if (!LittleFS.exists("/ranking.txt")) {
         File file = LittleFS.open("/ranking.txt", "w");
         if (file) {
-            file.println("Jogador1:0");
-            file.println("Jogador2:0");
-            file.println("Jogador3:0");
-            file.println("Jogador4:0");
-            file.println("Jogador5:0");
+            file.println("N/A:0");
+            file.println("N/A:0");
+            file.println("N/A:0");
+            file.println("N/A:0");
+            file.println("N/A:0");
             file.close();
         }
     }
@@ -73,4 +75,10 @@ void loop() {
             delay(300);
         }
     }
+
+    if (!jogoEmAndamento && millis() - ultimoTempoTelegram > intervaloTelegram) {
+        ultimoTempoTelegram = millis();
+        enviarRankingTelegram();
+    }
+
 }

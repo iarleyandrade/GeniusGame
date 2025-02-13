@@ -29,14 +29,14 @@ void interagirFimJogo(int pontuacao) {
 
         if (leituraSalvar == LOW) {
             digitalWrite(22, HIGH);
-            delay(100);
+            delay(300);
             digitalWrite(22, LOW);
             esperaNome = true;
             esperarNome(pontuacao);
             break;  
         } else if (leituraNaoSalvar == LOW) {
             digitalWrite(5, HIGH);
-            delay(100);
+            delay(300);
             digitalWrite(5, LOW);
             bot.sendMessage(String(NUMERO_DESTINO), "Você escolheu não salvar seu placar.", "");
             esperaNome = false;
@@ -64,13 +64,24 @@ void mostrarRanking(String chat_id, String texto) {
 
 void esperarNome(int pontuacao) {
     exibirMensagem("Digite seu \n nome no \n Telegram", 2, 10, 10);
+
+    // Limpa todas as mensagens pendentes antes de enviar a solicitação
+    while (true) {
+        int mensagensPendentes = bot.getUpdates(bot.last_message_received + 1);
+        if (mensagensPendentes == 0) break;
+    }
+
+    // Atualiza o ID da última mensagem recebida após a limpeza completa
+    int ultimaMensagemRecebida = bot.last_message_received;
+
+    // Envia a mensagem pedindo o nome
     bot.sendMessage(String(NUMERO_DESTINO), "Digite seu nome para salvar no ranking:", "");
 
     unsigned long tempoInicial = millis(); 
 
     while (esperaNome) {  
-        
-        int numNovasMensagens = bot.getUpdates(bot.last_message_received + 1);
+        // Verifica apenas as mensagens após a última mensagem limpa
+        int numNovasMensagens = bot.getUpdates(ultimaMensagemRecebida + 1);
 
         if (numNovasMensagens > 0) {
             for (int i = 0; i < numNovasMensagens; i++) {
@@ -97,6 +108,51 @@ void esperarNome(int pontuacao) {
     }
 }
 
+void enviarRankingTelegram() {
+    static unsigned long ultimoTempo = 0;
+    unsigned long intervalo = 500; 
 
+    if (millis() - ultimoTempo > intervalo) {
+        ultimoTempo = millis();
+        
 
+        int numNovasMensagens = bot.getUpdates(bot.last_message_received + 1);
 
+        if (numNovasMensagens > 0) {
+            for (int i = 0; i < numNovasMensagens; i++) {
+                String chat_id = bot.messages[i].chat_id;
+                String textoRecebido = bot.messages[i].text;
+
+                if (textoRecebido == "/ranking") {
+                    String rankingTexto = lerRanking();
+
+                    if (rankingTexto.length() == 0) {
+                        rankingTexto = "Ainda não há registros no ranking!";
+                    } else {
+                        String rankingFormatado = "Ranking Atual:\n";
+                        int posicao = 1;
+
+                        int inicio = 0;
+                        int fim = rankingTexto.indexOf('\n');
+
+                        while (fim != -1) {
+                            String linha = rankingTexto.substring(inicio, fim);
+
+                            rankingFormatado += String(posicao) + "º - " + linha + " pontos\n";
+                            inicio = fim + 1;
+                            fim = rankingTexto.indexOf('\n', inicio);
+                            posicao++;
+                        }
+
+                        // Adiciona a última linha, se houver
+                        if (inicio < rankingTexto.length()) {
+                            rankingFormatado += String(posicao) + "º - " + rankingTexto.substring(inicio) + " pontos";
+                        }
+                        
+                        bot.sendMessage(chat_id, rankingFormatado, "");
+                    }
+                }
+            }
+        }
+    }
+}

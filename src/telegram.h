@@ -9,5 +9,6 @@ void mostrarRanking(String chat_id, String texto);
 void interagirFimJogo(int pontos);
 void inicializarTelegram();
 void esperarNome(int pontuacao);
+void enviarRankingTelegram();
 
 #endif
