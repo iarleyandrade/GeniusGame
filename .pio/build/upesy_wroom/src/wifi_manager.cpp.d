@@ -212,4 +212,6 @@
  C:/Users/iarle/.platformio/packages/framework-arduinoespressif32/cores/esp32/MD5Builder.h \
  C:/Users/iarle/.platformio/packages/framework-arduinoespressif32/tools/sdk/esp32/include/esp_rom/include/esp_rom_md5.h \
  .pio/libdeps/upesy_wroom/WiFiManager/wm_strings_en.h \
- .pio/libdeps/upesy_wroom/WiFiManager/wm_consts_en.h src/display.h
+ .pio/libdeps/upesy_wroom/WiFiManager/wm_consts_en.h src/display.h \
+ C:/Users/iarle/.platformio/packages/framework-arduinoespressif32/libraries/LittleFS/src/LittleFS.h \
+ C:/Users/iarle/.platformio/packages/framework-arduinoespressif32/libraries/FS/src/FS.h

@@ -117,3 +117,19 @@ bool verificarPontuacaoRanking(int pontuacao) {
     return false;  // Se a pontuação não entra no ranking
 }
 
+void restartRanking() {
+    if (LittleFS.exists("/ranking.txt")) {
+        LittleFS.remove("/ranking.txt");
+    }
+    
+    File file = LittleFS.open("/ranking.txt", "w");
+    if (file) {
+        file.println("N/A:0");
+        file.println("N/A:0");
+        file.println("N/A:0");
+        file.println("N/A:0");
+        file.println("N/A:0");
+        file.close();
+    }
+}
+

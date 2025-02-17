@@ -22,7 +22,7 @@ void inicializarTelegram() {
 }
 
 void interagirFimJogo(int pontuacao) {
-    bot.sendMessage(String(NUMERO_DESTINO), "Deseja salvar seu placar? ('sim' aperte verde ou 'não' aperte vermelho)", "");
+    bot.sendMessage(String(NUMERO_DESTINO), "Deseja salvar seu placar? ('sim' aperte verde ou 'nao' aperte vermelho)", "");
     while (true) {
         int leituraSalvar = digitalRead(PINO_SALVAR);
         int leituraNaoSalvar = digitalRead(PINO_NAO_SALVAR);
@@ -151,6 +151,9 @@ void enviarRankingTelegram() {
                         
                         bot.sendMessage(chat_id, rankingFormatado, "");
                     }
+                } else if (textoRecebido == "/resetRanking" && chat_id.toInt() == NUMERO_DESTINO) {
+                    restartRanking();
+                    bot.sendMessage(chat_id, "Ranking resetado com sucesso!", "");
                 }
             }
         }

@@ -12,6 +12,7 @@ const int totaljogadas = 100;
 const uint8_t pinoled[] = {5, 22, 2, 27};
 const uint8_t pinobotao[] = {26, 25, 33, 32};
 bool jogoEmAndamento = false;
+bool conectadoWifi = false;
 #define vibracal 13
 
 // Definindo os tons para os LEDs
@@ -99,9 +100,9 @@ void gameOver() {
     digitalWrite(vibracal, LOW);
 
     int pontos = gameIndex - 1;
-    if (verificarPontuacaoRanking(pontos))
+    if (verificarPontuacaoRanking(pontos) && conectadoWifi)
     {
-      exibirMensagem("Salvar placar?\n Verde - Sim\n Vermelho - Não", 1, 10, 10);
+      exibirMensagem("Salvar placar?\n Verde - Sim\n Vermelho - Nao", 1, 10, 10);
       interagirFimJogo(pontos);
       delay(3000);
     }
@@ -109,7 +110,7 @@ void gameOver() {
 
     gameIndex = 0;
     exibirRanking();
-    delay(4000);
+    delay(6000);
 
     Serial.println("Aperte Start para iniciar um novo jogo");
     exibirStart();

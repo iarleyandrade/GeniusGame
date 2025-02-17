@@ -11,6 +11,7 @@
 #define botao_start 19
 static unsigned long ultimoTempoTelegram = 0;
 unsigned long intervaloTelegram = 5000;
+extern bool conectadoWifi;
 
 void setup() {
     Serial.begin(115200);
@@ -76,9 +77,10 @@ void loop() {
         }
     }
 
-    if (!jogoEmAndamento && millis() - ultimoTempoTelegram > intervaloTelegram) {
+    if (!jogoEmAndamento && conectadoWifi && millis() - ultimoTempoTelegram > intervaloTelegram) {
         ultimoTempoTelegram = millis();
         enviarRankingTelegram();
     }
+    
 
 }
